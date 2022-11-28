@@ -15,14 +15,17 @@ services:
   
   postgres-rest:
     container_name: postgres-rest
-    image: postgres:15
+    image: postgres:14
     volumes:
       - postgres-rest:/var/lib/postgresql/data
     environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_REST}
     restart: always
+    ports:
+      - 5433:5432
 
   mysql:
     container_name: mysql
@@ -46,7 +49,7 @@ services:
   php:
     container_name: php
     depends_on:
-      - postgres
+      - postgres-php
     volumes:
       - ../binotify-app/src:/var/www/html/
     environment:
@@ -82,7 +85,7 @@ services:
   rest:
     container_name: rest
     depends_on:
-      - postgres
+      - postgres-rest
     volumes:
       - ../binotify-rest-service/src:/var/www/html/
     environment:
@@ -91,9 +94,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_REST}
       API_KEY: ${API_KEY_REST}
+      WAIT_HOSTS: postgres-rest:5432
     build:
       context: ../binotify-rest-service
-      dockerfile: Dockerfile.rest
+      dockerfile: Dockerfile
     ports:
       - 3002:80
 
