@@ -80,6 +80,8 @@ services:
     depends_on:
       - postgres-rest
       - redis
+    volumes:
+      - ../binotify-rest-service/:/app
     environment:
       POSTGRES_HOST: postgres-rest
       POSTGRES_USER: ${POSTGRES_USER}
