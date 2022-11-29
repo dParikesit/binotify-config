@@ -80,6 +80,7 @@ services:
     depends_on:
       - postgres-rest
       - redis
+      - soap
     volumes:
       - ../binotify-rest-service/:/app
     environment:
@@ -88,12 +89,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_REST}
       API_KEY: ${API_KEY_REST}
-      WAIT_HOSTS: postgres-rest:5432, redis:6379
+      WAIT_HOSTS: postgres-rest:5432, redis:6379, soap:80
     build:
       context: ../binotify-rest-service
       dockerfile: Dockerfile.rest
     ports:
-      - 3002:80
+      - 3002:3002
   
   soap:
     container_name: soap
@@ -107,6 +108,7 @@ services:
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASS: ${MYSQL_PASSWORD}
+      WAIT_HOSTS: mysql:3306
     build:
       context: ../binotify-soap-service
       dockerfile: Dockerfile.soap
