@@ -15,7 +15,9 @@ services:
   
   postgres-rest:
     container_name: postgres-rest
-    image: postgres:14-alpine
+    build:
+      context: ../binotify-rest-service
+      dockerfile: Dockerfile.postgres
     volumes:
       - postgres-rest:/var/lib/postgresql/data
     environment:
@@ -85,19 +87,17 @@ services:
     container_name: rest
     depends_on:
       - postgres-rest
-      - postgres-php
-      - php
-      - soap
+      - redis
     environment:
-      POSTGRES_HOST: 1postgres-user
+      POSTGRES_HOST: postgres-rest
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_REST}
       API_KEY: ${API_KEY_REST}
-      WAIT_HOSTS: postgres-rest:5432
+      WAIT_HOSTS: postgres-rest:5432, redis:6379
     build:
       context: ../binotify-rest-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.rest
     ports:
       - 3002:80
 
