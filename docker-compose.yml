@@ -81,15 +81,17 @@ services:
       - postgres-rest
       - redis
       - soap
+      - mysql
     volumes:
       - ../binotify-rest-service/:/app
     environment:
+      NODE_ENV: production
       POSTGRES_HOST: postgres-rest
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_REST}
       API_KEY: ${API_KEY_REST}
-      WAIT_HOSTS: postgres-rest:5432, redis:6379, soap:80
+      WAIT_HOSTS: postgres-rest:5432, redis:6379, mysql:3306, soap:80
     build:
       context: ../binotify-rest-service
       dockerfile: Dockerfile.rest
