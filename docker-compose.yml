@@ -67,13 +67,15 @@ services:
   
   premium-app:
     container_name: premium-app
+    volumes:
+      - ../binotify-premium-app/:/app
     environment:
       API_KEY: ${API_KEY_FRONTEND}
     build:
       context: ../binotify-premium-app
       dockerfile: Dockerfile
     ports:
-      - 3001:80
+      - 3001:3000
 
   rest:
     container_name: rest
@@ -102,8 +104,6 @@ services:
     container_name: soap
     depends_on:
       - mysql
-    volumes:
-      - ../binotify-soap-service/src:/var/www/html/
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
