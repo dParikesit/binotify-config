@@ -12,6 +12,7 @@
         - binotify-premium-app
 3. Run this command
 ```
+cd binotify-config
 docker compose up
 ```
 
